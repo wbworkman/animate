@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        a {
+            text-decoration: none;
+        }
+        
+        .wrap {
+            width: 1200px;
+            margin: 20px auto;
+        }
+        
+        .slide {
+            height: 500px;
+            position: relative;
+        }
+        
+        .slide li {
+            position: absolute;
+            top: 0;
+            left: 200px;
+        }
+        
+        .slide li img {
+            width: 100%;
+            vertical-align: top;
+        }
+        
+        .arrow {
+            opacity: 0;
+        }
+        
+        .prev,
+        .next {
+            position: absolute;
+            top: 50%;
+            margin-top: -56px;
+            width: 76px;
+            height: 112px;
+            background: url('./images/prev.png') no-repeat;
+            z-index: 99;
+        }
+        
+        .next {
+            right: 0;
+            background: url('./images/next.png');
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap" id="wrap">
+        <div class="slide" id="slide">
+            <ul>
+                <li>
+                    <a href="javascript:;"><img src="./images/slidepic1.jpg" alt=""></a>
+                </li>
+                <li>
+                    <a href="javascript:;"><img src="./images/slidepic2.jpg" alt=""></a>
+                </li>
+                <li>
+                    <a href="javascript:;"><img src="./images/slidepic3.jpg" alt=""></a>
+                </li>
+                <li>
+                    <a href="javascript:;"><img src="./images/slidepic4.jpg" alt=""></a>
+                </li>
+                <li>
+                    <a href="javascript:;"><img src="./images/slidepic5.jpg" alt=""></a>
+                </li>
+            </ul>
+            <div class="arrow" id="arrow">
+                <a href="javascript:;" class="prev"></a>
+                <a href="javascript:;" class="next"></a>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="./animate.js"></script>
+<script type="text/javascript">
+    //先把每个li下面 位置 大小 透明度 还有层级关系 这些属性计算好 调整好 然后通过js
+    //循环 赋值 建立一个数组 里面存下每个li对应的详细位置宽度透明度等变化数据
+    var aLiJson = [{
+            "width": 400,
+            "top": 70,
+            "left": 50,
+            "opacity": 20,
+            "z-index": 2
+        }, {
+            'width': 600,
+            'top': 120,
+            'left': 0,
+            'opacity': 60,
+            'z-index': 3
+        }, {
+            'width': 800,
+            'top': 100,
+            'left': 200,
+            'opacity': 100,
+            'z-index': 4
+        }, {
+            'width': 600,
+            'top': 120,
+            'left': 600,
+            'opacity': 60,
+            'z-index': 3
+        }, {
+            'width': 400,
+            'top': 70,
+            'left': 750,
+            'opacity': 20,
+            'z-index': 2
+        }]
+        //获取所有li
+    var oSlide = document.getElementById('slide');
+    var aLi = oSlide.getElementsByTagName('li');
+
+    var oWrap = document.getElementById('wrap');
+    var oArrow = document.getElementById('arrow');
+    var aA = oArrow.getElementsByTagName('a');
+    var prev = aA[0];
+    var next = aA[1];
+
+    //建立一个开关
+    var flag = true;
+
+    core();
+    oWrap.onmouseover = function() {
+        oArrow.className = '';
+    }
+    oWrap.onmouseout = function() {
+        oArrow.className = 'arrow';
+    }
+    prev.onclick = function() {
+        if (flag)
+            flag = false;
+        core(true);
+    }
+    next.onclick = function() {
+        if (flag)
+            flag = false; //如果当前是真 说明要么是第一次 要么之前的运动结束
+        core(false);
+    }
+
+
+
+
+    function core(onOff) {
+        if (onOff != undefined) {
+            if (onOff) {
+                aLiJson.unshift(aLiJson.pop());
+            } else {
+                aLiJson.push(aLiJson.shift());
+            }
+        }
+
+        for (var i = 0; i < aLi.length; i++) {
+            animate(aLi[i], aLiJson[i], function() {
+                flag = true;
+            })
+        }
+    }
+</script>
+
+</html>
